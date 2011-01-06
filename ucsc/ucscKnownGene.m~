@@ -1,0 +1,43 @@
+classdef ucscKnownGene
+    %UCSCANNOT Summary of this class goes here
+    %   Detailed explanation goes here
+    
+    properties
+        src_path;
+        name;
+        chrom;
+        strand;
+        tx_start;
+        tx_end;
+        cds_start;
+        cds_end;
+        exon_count;
+        exon_starts;
+        exon_ends;
+        protein_id;
+        align_id;
+    end
+    
+    methods
+        function obj = ucscKnownGene(src_path)
+            if (nargin > 0)
+                obj.src_path = src_path;
+            end
+        end
+        
+        % exons is a 2D matrix [[start, end]; ...]
+        function exons = getAllExons()
+        end
+        
+        % TSS is a 1D matrix of start pos
+        function tss = getAllTSS()
+        end
+        
+        function tse = getAllTSE()
+        end
+        
+ 
+    end
+    
+end
+

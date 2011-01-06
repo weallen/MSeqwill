@@ -1,0 +1,40 @@
+function foo = genomeEnrichmentPlot( chipseqdata, dset_names, scale_fac)
+%GENOMEENRICHMENT Summary of this function goes here
+%   dsets = cell array of N dataset names
+    [part_data, sizes] = partitionDataAndScale(chipseqdata, dset_names, scale_fac);
+    for chr=1:20
+        for j=1:length(dset_names)
+            part_data{chr}(j,:) =  part_data{chr}(j,:) / sizes(j);
+        end
+    end
+    foo = part_data;
+    set(gcf,'PaperUnits','inches');
+    x_size = 60; y_size = 40;
+    
+    for chr=1:20
+        h = axes('position', [0 20/chr 
+        set(h, 'position', [1, chr, length(part_data{chr}(1,:)), 1]);
+        imagesc(part_data{chr}(:,:));
+        axis off;
+    end
+end
+
+% sizes is total size of each dataset before partitioning and scaling
+function [partitioned_data, sizes] = partitionDataAndScale(chipseqdata, dset_names, scale_fac)
+    sizes = zeros(1, length(dset_names));
+    partitioned_data = cell(1,20);
+    num_dsets = length(dset_names);
+    for i=1:num_dsets
+        name = dset_names{i};
+        sizes(i) = chipseqdata.dset_sizes(name);
+    end
+    for chr=1:20
+        for i=1:num_dsets
+            chr_data = reduceResolution(chipseqdata.getDataByChr(chr, dset_names{i}), scale_fac);
+            if isempty(partitioned_data{chr})
+                partitioned_data{chr} = zeros(num_dsets, length(chr_data));
+            end
+            partitioned_data{chr}(i, :) = chr_data;
+        end
+    end
+end
